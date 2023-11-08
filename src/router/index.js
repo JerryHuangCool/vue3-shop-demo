@@ -9,11 +9,12 @@ const router = createRouter({
     },
     {
       path: '/',
+      redirect: '/home',
       component: () => import('@/views/Layout/LayoutPage.vue'),
       children: [
-        { path: '', component: () => import('@/views/Home/HomePage.vue') },
+        { path: '/home', component: () => import('@/views/Home/HomePage.vue') },
         {
-          path: 'category',
+          path: 'category/:id',
           component: () => import('@/views/Category/CategoryPage.vue')
         }
       ]
