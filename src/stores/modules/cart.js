@@ -19,10 +19,19 @@ export const useCartStore = defineStore(
       const idx = cartList.value.findIndex((item) => skuId === item.skuId)
       cartList.value.splice(idx, 1)
     }
+    function singleCheck(skuId, sel) {
+      const item = cartList.value.find((item) => item.skuId === skuId)
+      item.selected = sel
+    }
+    function allCheck(sel) {
+      cartList.value.forEach((item) => (item.selected = sel))
+    }
     return {
       cartList,
       addCart,
-      delCart
+      delCart,
+      singleCheck,
+      allCheck
     }
   },
   {
