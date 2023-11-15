@@ -1,35 +1,42 @@
 <script setup>
 import { useCartStore } from '@/stores'
-import { ref, computed } from 'vue'
+import { ElMessage } from 'element-plus'
+import { computed } from 'vue'
 const cartStore = useCartStore()
-const cartList = ref(cartStore.cartList)
 const isAll = computed(() => {
-  return cartList.value.every((item) => item.selected === true)
+  return cartStore.cartList.every((item) => item.selected === true)
 })
 function singleCheck(i, sel) {
-  cartStore.singleCheck(i.skuId, sel)
+  cartStore.singleCheck(i, sel)
 }
 function allCheck(sel) {
   cartStore.allCheck(sel)
 }
 // 3. 已选择数量
 const selectedCount = computed(() =>
-  cartList.value
+  cartStore.cartList
     .filter((item) => item.selected)
     .reduce((a, c) => a + c.count, 0)
 )
 // 4. 已选择商品价钱合计
 const selectedPrice = computed(() =>
-  cartList.value
+  cartStore.cartList
     .filter((item) => item.selected)
     .reduce((a, c) => a + c.count * c.price, 0)
     .toFixed(2)
 )
 const sum = computed(() => {
-  return cartList.value.reduce((pre, next) => {
+  return cartStore.cartList.reduce((pre, next) => {
     return pre + next.count
   }, 0)
 })
+async function delCart(item) {
+  await cartStore.delCart(item.skuId)
+  ElMessage.success('删除成功')
+}
+async function countChange(i) {
+  await cartStore.changeCart(i)
+}
 </script>
 
 <template>
@@ -51,7 +58,7 @@ const sum = computed(() => {
           </thead>
           <!-- 商品列表 -->
           <tbody>
-            <tr v-for="i in cartList" :key="i.id">
+            <tr v-for="i in cartStore.cartList" :key="i.id">
               <td>
                 <el-checkbox
                   :model-value="i.selected"
@@ -74,7 +81,11 @@ const sum = computed(() => {
                 <p>&yen;{{ i.price }}</p>
               </td>
               <td class="tc">
-                <el-input-number v-model="i.count" />
+                <el-input-number
+                  v-model="i.count"
+                  @change="(count) => countChange(i)"
+                  min="1"
+                />
               </td>
               <td class="tc">
                 <p class="f16 red">&yen;{{ (i.price * i.count).toFixed(2) }}</p>
@@ -94,7 +105,7 @@ const sum = computed(() => {
                 </p>
               </td>
             </tr>
-            <tr v-if="cartList.length === 0">
+            <tr v-if="cartStore.cartList.length === 0">
               <td colspan="6">
                 <div class="cart-none">
                   <el-empty description="购物车列表为空">
@@ -113,7 +124,9 @@ const sum = computed(() => {
           <span class="red">¥ {{ selectedPrice }} </span>
         </div>
         <div class="total">
-          <el-button size="large" type="primary">下单结算</el-button>
+          <el-button size="large" type="primary" @click="$router.push('/order')"
+            >下单结算</el-button
+          >
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores'
+import { useUserStore, useCartStore } from '@/stores'
 const userStore = useUserStore()
+const cartStore = useCartStore()
 const formRef = ref(null)
 const router = useRouter()
 // 表单数据对象
@@ -39,6 +40,7 @@ async function doLogin() {
         userInfo.value.password
       )
       ElMessage({ type: 'success', message: '登录成功' })
+      cartStore.mergeLocalCart()
       // 2. 跳转首页
       router.replace({ path: '/' })
     }

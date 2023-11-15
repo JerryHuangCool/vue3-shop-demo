@@ -1,10 +1,12 @@
 <script setup>
-import { useUserStore } from '@/stores'
+import { useUserStore, useCartStore } from '@/stores'
 import { useRouter } from 'vue-router'
 const userStore = useUserStore()
+const cartStore = useCartStore()
 const router = useRouter()
 function confirm() {
   userStore.removeUserInfo()
+  cartStore.clearCart()
   router.replace('/login')
 }
 </script>
