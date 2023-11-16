@@ -2,6 +2,9 @@
 import { getOrderAPI } from '@/api/order'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useCountDown } from '@/composables/useCountDown'
+const { formatTime, start } = useCountDown()
+start(1800)
 const route = useRoute()
 const payInfo = ref({})
 async function getPayInfo() {
@@ -9,6 +12,11 @@ async function getPayInfo() {
   payInfo.value = res.result
 }
 getPayInfo()
+// 支付地址
+const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
+const backURL = 'http://127.0.0.1:5173/paycallback'
+const redirectUrl = encodeURIComponent(backURL)
+const payUrl = `${baseURL}pay/aliPay?orderId=${route.query.id}&redirect=${redirectUrl}`
 </script>
 
 <template>
@@ -19,7 +27,10 @@ getPayInfo()
         <span class="icon iconfont icon-queren2"></span>
         <div class="tip">
           <p>订单提交成功！请尽快完成支付。</p>
-          <p>支付还剩 <span>24分30秒</span>, 超时后将取消订单</p>
+          <p>
+            支付还剩 <span>{{ formatTime }}</span
+            >, 超时后将取消订单
+          </p>
         </div>
         <div class="amount">
           <span>应付总额：</span>
