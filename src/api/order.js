@@ -18,3 +18,10 @@ export function getOrderAPI(id) {
     url: `/member/order/${id}`
   })
 }
+
+export function getUserOrder(params) {
+  return request({
+    url: '/member/order',
+    params
+  })
+}

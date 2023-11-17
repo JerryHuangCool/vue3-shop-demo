@@ -17,7 +17,7 @@ function confirm() {
       <ul>
         <template v-if="userStore.userInfo.token">
           <li>
-            <a href="javascript:;"
+            <a href="javascript:;" @click="$router.push('/member')"
               ><i class="iconfont icon-user"></i
               >{{ userStore.userInfo.nickname }}</a
             >

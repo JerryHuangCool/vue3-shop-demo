@@ -26,20 +26,34 @@ const router = createRouter({
           component: () => import('@/views/Detail/DetailPage.vue')
         },
         {
-          path: '/cart',
+          path: 'cart',
           component: () => import('@/views/Cart/CartPage.vue')
         },
         {
-          path: '/order',
+          path: 'order',
           component: () => import('@/views/Checkout/CheckoutPage.vue')
         },
         {
-          path: '/pay',
+          path: 'pay',
           component: () => import('@/views/Pay/PayPage.vue')
         },
         {
-          path: '/paycallback',
+          path: 'paycallback',
           component: () => import('@/views/Pay/PayBackPage.vue')
+        },
+        {
+          path: 'member',
+          component: () => import('@/views/Member/MemberPage.vue'),
+          children: [
+            {
+              path: '',
+              component: () => import('@/views/Member/components/UserInfo.vue')
+            },
+            {
+              path: 'order',
+              component: () => import('@/views/Member/components/UserOrder.vue')
+            }
+          ]
         }
       ]
     }
